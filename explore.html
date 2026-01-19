@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anuli's Store - Explore</title>
+    <link rel="stylesheet" href="explore.css">
+</head>
+<body>
+    <div class="navbar">
+  <div class="logo">FlexShop</div>
+  <a href="cart.html" style="color:white">Go to Cart</a>
+</div>
+
+<h2 id="title"></h2>
+
+<div class="products" id="products"></div>
+
+<script>
+/* SAME PRODUCT DATA */
+const productsData = [
+  {id:1,name:"Shoes",price:1200,category:"shoes",image:"https://via.placeholder.com/300"},
+  {id:2,name:"Watch",price:2500,category:"watch",image:"https://via.placeholder.com/300"},
+  {id:3,name:"Bag",price:1800,category:"bag",image:"https://via.placeholder.com/300"},
+  {id:4,name:"Headphones",price:2200,category:"electronics",image:"https://via.placeholder.com/300"}
+];
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+/* READ CATEGORY FROM URL */
+let params = new URLSearchParams(window.location.search);
+let category = params.get("category");
+
+document.getElementById("title").innerText =
+  "More products in " + category;
+
+/* SHOW CATEGORY PRODUCTS */
+const box = document.getElementById("products");
+
+productsData.forEach(p=>{
+  if(p.category === category){
+    box.innerHTML+=`
+      <div class="product">
+        <img src="${p.image}">
+        <h3>${p.name}</h3>
+        <p>₹${p.price}</p>
+
+        <!-- ADD TO CART ONLY HERE -->
+        <button onclick="addToCart(${p.id})">
+          Add to Cart
+        </button>
+      </div>
+    `;
+  }
+});
+
+/* ADD TO CART */
+function addToCart(id){
+  const item = productsData.find(p=>p.id===id);
+  const existing = cart.find(p=>p.id===id);
+
+  if(existing){
+    existing.qty++;
+  }else{
+    cart.push({...item,qty:1});
+  }
+
+  localStorage.setItem("cart",JSON.stringify(cart));
+  alert("Added to Cart");
+}
+</script>
+
+
+    <a href="index.html" style="color: white;"> ⬅ Continue Shopping</a>
+</body>
+</html>
